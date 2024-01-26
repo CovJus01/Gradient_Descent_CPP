@@ -10,67 +10,89 @@
 
 
 template <typename T>
-T compute_univariate_cost();
+T UnivariateCost();
 
 template <typename T>
-std::pair<T, T> compute_univariate_gradient();
+struct pairSum;
 
 template <typename T>
-T univariate_gd();
+std::pair<T, T> univariateGradient();
 
 template <typename T>
-T compute_univariate_cost(T w, T b,  std::vector<std::pair<T, T>> &expected) {
+T univariateGradientDescent();
 
-      //Initialization
-      std::vector<T> squared_error;
-      int data_size = expected.size();
-      std::cout << "Data size: "<< data_size << std::endl;
-      squared_error.resize(data_size);
+template <typename T>
+T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y) {
 
-      //Perform square_error on dataset
-      std::transform(expected.begin(), expected.end(), squared_error.begin(), [constW = w, constB = b](std::pair<T, T> input) {return pow(((input.first * constW + constB ) - input.second), 2);});
-      std::cout << "Square Error: "<< std::endl ;
-      for(auto i : squared_error)
-            std::cout << i<< ", ";
-      std::cout << std::endl;
+      // Initialization
+      int data_size = x.size(); // Size of training set
+      std::vector<T> squared_error(data_size); 
 
-      //Sum the square_errors and divide to fine average
-      T sum = std::accumulate(squared_error.begin(), squared_error.end(), 0, [](T lastVal, T currentVal) {return lastVal + currentVal;});
-      std::cout << "Sum: "<< sum << std::endl ;
+      // Perform square_error on dataset
+      std::transform(   x.begin(), x.end(), y.begin(), squared_error.begin(), 
+                        [constW = w, constB = b](T xValue, T yValue) {
+                            return pow(((xValue * constW + constB ) - yValue), 2);
+                            });
+
+      // Sum the square_errors
+      T sum = std::accumulate(  squared_error.begin(), squared_error.end(), 0,
+                                [](T lastValue, T currentValue) {
+                                    return lastValue + currentValue;
+                                    });
+      // Divide to find average cost
       sum *= (1.0f/(2.0f*data_size));
 
  return sum;
 }
 
-template <typename T>
-T compute_dj_dw_error(T input, T result, T w, T b) {
-  return ((input * w + b ) - result)*input;
-}
+template <typename T> class UnivariateGradientError {
+    private:
+        T w;
+        T b;
+        T univariateError_dj_dw(T w, T b, T xi, T yi) {
+            // Derivative of square error w.r.t w (scalar 2 cancelled in larger equation)
+            return ((xi * w + b ) - yi)*xi;
+        }
+        T univariateError_dj_db(T w, T b, T xi, T yi) {
+            // Derivative of square error w.r.t b (scalar 2 cancelled in larger equation)
+            return ((xi * w + b ) - yi);
+            }
+    public:
+        UnivariateGradientError(T w_in, T b_in) {
+            w = w_in;
+            b = b_in;
+        }
+
+        // Operator Override to return both gradient errors as a pair
+        std::pair<T,T> operator () (T xValue, T yValue) {
+            return std::make_pair(univariateError_dj_dw(w, b, xValue, yValue), univariateError_dj_db(w, b, xValue, yValue));
+        }
+};
+
+// Binary Operator for a sum of two pairs
+template <typename T> struct pairSum {
+    std::pair<T,T> operator () (std::pair<T,T> x, std::pair<T,T> y){
+    return std::make_pair(x.first+y.first, x.second + y.second);
+    }
+};
 
 template <typename T>
-T compute_dj_db_error(T input, T result, T w, T b) {
-  return ((input * w + b ) - result);
-}
+std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> &y ) {
 
-template <typename T>
-std::pair<T, T> compute_univariate_gradient(T w, T b,  std::vector<std::pair<T, T>> &expected) {
+    // Initialize
+    int data_size = x.size(); // Size of training set
+    std::vector<std::pair<T, T>> dj_dt_error(data_size);
 
- std::vector<std::pair<T, T>> dj_dt_error;
- int data_size = expected.size();
- dj_dt_error.resize(data_size);
+    // Calculate both Gradient Errors
+    transform(x.begin(), x.end(), y.begin(), dj_dt_error.begin(), UnivariateGradientError<T>(w, b));
 
- transform(expected.begin(), expected.end(),
-           dj_dt_error.begin(), 
-           [constW = w, constB = b](std::vector<std::pair<T, T>> input) {
-              return std::make_pair(compute_dj_dw_error(input.first, input.second, constW, constB), compute_dj_db_error(input.first, input.second, constW, constB));
-              });
- T sum = accumulate(dj_dt_error.begin(), dj_dt_error.end(),
-                    std::make_pair(0, 0),
-                    [](T lastVal, T currentVal) {
-                      return std::make_pair(lastVal.first+currentVal.first, lastVal.second + currentVal.second);
-                      });
- sum = std::make_pair(sum.first/data_size, sum.second/data_size);
- return sum;
+    // Sum all the errors together
+    std::pair<T,T> sum = accumulate(dj_dt_error.begin(), dj_dt_error.end(), std::make_pair(0, 0), pairSum<T>());
+
+    // Divide to get the gradient
+    sum = std::make_pair(sum.first/data_size, sum.second/data_size);
+    
+    return sum;
 }
 
 template <typename T>
