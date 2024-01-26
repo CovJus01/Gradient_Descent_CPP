@@ -7,7 +7,7 @@
 #include <iostream>
 #include <numeric>
 #include <string>
-
+#include <iomanip>
 // ***************************** Declarations *****************************
 
 
@@ -35,7 +35,7 @@ template <typename T> class squareError {
     }
 
     T operator () (T xi, T yi) {
-        return pow(((xi * w + b ) - yi), 2);
+        return pow(((xi * w + b ) - yi), 2.0);
     }
 };
 
@@ -50,7 +50,7 @@ T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y) {
       std::transform(x.begin(), x.end(), y.begin(), squared_error.begin(), squareError<T>(w,b));
 
       // Sum the square_errors
-      T sum = std::accumulate(squared_error.begin(), squared_error.end(), 0, std::plus<T>());
+      T sum = std::accumulate(squared_error.begin(), squared_error.end(), 0.0, std::plus<T>());
 
       // Divide to find average cost
       sum *= (1.0/(2.0*(double)data_size));
@@ -100,7 +100,7 @@ std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> 
     transform(x.begin(), x.end(), y.begin(), dj_dt_error.begin(), UnivariateGradientError<T>(w, b));
 
     // Sum all the errors together
-    std::pair<T,T> sum = accumulate(dj_dt_error.begin(), dj_dt_error.end(), std::make_pair(0, 0), pairSum<T>());
+    std::pair<T,T> sum = accumulate(dj_dt_error.begin(), dj_dt_error.end(), std::make_pair(0.0, 0.0), pairSum<T>());
 
     // Divide to get the gradient
     sum = std::make_pair(sum.first/data_size, sum.second/data_size);
@@ -119,7 +119,7 @@ std::pair<T,T> univariateGradientDescent(T init_w, T init_b, std::vector<T> x, s
     for(int i = 0; i < iterations; i++) {
         cost = univariateCost<T>(w,b,x,y);
         if(i % 150 == 0) {
-            std::cout << "Iteration "<< i << ": " << w << ", "<< b << "| Cost: " << cost << std::endl;
+            std::cout << "Iteration "<< i << ": " << w << ", "<< b << "| Cost: " << std::setprecision(6) << cost << std::endl;
         }
         gradient = univariateGradient<T>(w,b,x,y);
         w = w - learning_rate * gradient.first;

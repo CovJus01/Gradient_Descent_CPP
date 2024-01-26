@@ -8,7 +8,7 @@ int main() {
       std::vector<double> y_train = {300.0, 500.0};
       double init_w = 2.0;
       double init_b = 1.0;
-      int iterations = 1500;
+      int iterations = 10000;
       double learning_rate = 0.01;
 
       // Usage
