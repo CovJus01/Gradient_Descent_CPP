@@ -3,13 +3,20 @@
 #include <vector>
 
 int main() {
-      std::vector<float> x_train = {1.0f, 2.0f};
-      std::vector<float> y_train = {300.0f, 500.0f};
-      float init_w = 2.0f;
-      float init_b = 1.0f;
-      float cost = univariateCost<float>(init_w, init_b, x_train, y_train);
+      // Learning Params and Data
+      std::vector<double> x_train = {1.0, 2.0};
+      std::vector<double> y_train = {300.0, 500.0};
+      double init_w = 2.0;
+      double init_b = 1.0;
+      int iterations = 1500;
+      double learning_rate = 0.01;
+
+      // Usage
+      auto cost = univariateCost<double>(init_w, init_b, x_train, y_train);
       std::cout << "Calculated Cost: "<< cost << std::endl;
-      auto gradients = univariateGradient<float>(init_w, init_b, x_train, y_train);
+      auto gradients = univariateGradient<double>(init_w, init_b, x_train, y_train);
       std::cout << "Calculated Gradients: "<< gradients.first << ", " << gradients.second << std::endl;
+      auto final_params = univariateGradientDescent<double>(init_w, init_b, x_train, y_train, learning_rate, iterations);
+      std::cout << "Calculated w & b: " << final_params.first << ", " << final_params.second << std::endl;
       return 0;
 }

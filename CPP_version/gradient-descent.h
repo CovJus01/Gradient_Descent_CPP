@@ -21,7 +21,7 @@ template <typename T>
 std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> &y );
 
 template <typename T>
-T univariateGradientDescent();
+std::pair<T,T> univariateGradientDescent(T w, T b, std::vector<T> x, std::vector<T> y);
 
 // ***************************** Definitions *****************************
 template <typename T> class squareError {
@@ -53,7 +53,7 @@ T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y) {
       T sum = std::accumulate(squared_error.begin(), squared_error.end(), 0, std::plus<T>());
 
       // Divide to find average cost
-      sum *= (1.0f/(2.0f*data_size));
+      sum *= (1.0/(2.0*(double)data_size));
 
  return sum;
 }
@@ -109,8 +109,24 @@ std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> 
 }
 
 template <typename T>
-T univariateGradientDescent() {
+std::pair<T,T> univariateGradientDescent(T init_w, T init_b, std::vector<T> x, std::vector<T> y, double learning_rate,int iterations) {
+    
+    double w = init_w;
+    double b = init_b;
+    std::pair<T,T> gradient;
+    T cost;
 
+    for(int i = 0; i < iterations; i++) {
+        cost = univariateCost<T>(w,b,x,y);
+        if(i % 150 == 0) {
+            std::cout << "Iteration "<< i << ": " << w << ", "<< b << "| Cost: " << cost << std::endl;
+        }
+        gradient = univariateGradient<T>(w,b,x,y);
+        w = w - learning_rate * gradient.first;
+        b = b - learning_rate * gradient.second;
+    }
+
+    return std::pair<T,T>(w,b);
 }
 
 
