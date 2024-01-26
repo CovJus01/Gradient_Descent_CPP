@@ -8,18 +8,36 @@
 #include <numeric>
 #include <string>
 
+// ***************************** Declarations *****************************
+
 
 template <typename T>
-T UnivariateCost();
+T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y);
 
 template <typename T>
 struct pairSum;
 
 template <typename T>
-std::pair<T, T> univariateGradient();
+std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> &y );
 
 template <typename T>
 T univariateGradientDescent();
+
+// ***************************** Definitions *****************************
+template <typename T> class squareError {
+    private:
+        T w;
+        T b;
+    public:
+    squareError(T w_in, T b_in) {
+        w = w_in;
+        b = b_in;
+    }
+
+    T operator () (T xi, T yi) {
+        return pow(((xi * w + b ) - yi), 2);
+    }
+};
 
 template <typename T>
 T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y) {
@@ -29,16 +47,11 @@ T univariateCost(T w, T b,  std::vector<T> &x, std::vector<T> &y) {
       std::vector<T> squared_error(data_size); 
 
       // Perform square_error on dataset
-      std::transform(   x.begin(), x.end(), y.begin(), squared_error.begin(), 
-                        [constW = w, constB = b](T xValue, T yValue) {
-                            return pow(((xValue * constW + constB ) - yValue), 2);
-                            });
+      std::transform(x.begin(), x.end(), y.begin(), squared_error.begin(), squareError<T>(w,b));
 
       // Sum the square_errors
-      T sum = std::accumulate(  squared_error.begin(), squared_error.end(), 0,
-                                [](T lastValue, T currentValue) {
-                                    return lastValue + currentValue;
-                                    });
+      T sum = std::accumulate(squared_error.begin(), squared_error.end(), 0, std::plus<T>());
+
       // Divide to find average cost
       sum *= (1.0f/(2.0f*data_size));
 
@@ -96,7 +109,7 @@ std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> 
 }
 
 template <typename T>
-T univariate_gradient_d() {
+T univariateGradientDescent() {
 
 }
 
