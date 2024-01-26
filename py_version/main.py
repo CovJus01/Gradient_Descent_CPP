@@ -3,15 +3,16 @@ import matplotlib.pyplot as plt
 from gradientDescent import *
 
 #Initialization of parameters
-x_train = np.array([1,2])
-y_train = np.array([300,500])
+x_train = np.array([1.0,2.0])
+y_train = np.array([300.0,500.0])
 m = x_train.shape[0]
-initial_w = 2
-initial_b = 1
-iterations = 1500
+initial_w = 2.0
+initial_b = 1.0
+iterations = 10000
 learningRate = 0.01
 predicted = np.zeros(m)
 
+print(f'Initial parameters: {initial_w}, {initial_b}')
 
 #Plot Data
 plt.scatter(x_train, y_train, marker='x', c='r') 
@@ -35,6 +36,8 @@ w,b,_,_ = univariateGradientDescent(x_train ,y_train, initial_w, initial_b,
 print("w,b found by gradient descent:", w, b)
 
 #Calculate prediction data
+# w = 194.595
+# b = 108.815
 for i in range(m):
     predicted[i] = w * x_train[i] + b
 
