@@ -3,13 +3,41 @@ import matplotlib.pyplot as plt
 from gradientDescent import *
 
 #Initialization of parameters
-x_train = np.array([1.0,2.0])
-y_train = np.array([300.0,500.0])
+
+x_train = np.array([])
+y_train = np.array([])
+input = open("../housing-barcelona.csv", encoding="utf8")
+input.readline()
+istream = input.readline()
+skip = False
+
+while (len(istream) != 0):
+    if(not(skip)):
+        istream = istream.split(",")
+        area = istream[2][0:len(istream[2])-3]
+        cost = istream[0][0:len(istream[0])-1]
+        print(area)
+        print(cost)
+        print(istream)
+        cost = cost.split(".")
+        cost = cost[0] + cost[1]
+        x_train = np.append(x_train, [float(area)])
+        y_train = np.append(y_train, [float(cost)])
+    try:
+        istream = input.readline()
+    except Exception as e:
+        print(e)
+        skip = True
+
+
+
+y_train = y_train / 1000
+x_train = x_train / max(x_train)
 m = x_train.shape[0]
 initial_w = 2.0
 initial_b = 1.0
 iterations = 10000
-learningRate = 0.01
+learningRate = 0.3
 predicted = np.zeros(m)
 
 print(f'Initial parameters: {initial_w}, {initial_b}')

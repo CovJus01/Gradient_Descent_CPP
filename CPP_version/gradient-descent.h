@@ -111,16 +111,21 @@ std::pair<T, T> univariateGradient(T w, T b,  std::vector<T> &x, std::vector<T> 
 template <typename T>
 std::pair<T,T> univariateGradientDescent(T init_w, T init_b, std::vector<T> x, std::vector<T> y, double learning_rate,int iterations) {
     
+    //Initializing Parameters
     double w = init_w;
     double b = init_b;
     std::pair<T,T> gradient;
     T cost;
 
+    //Iterating the approximation
     for(int i = 0; i < iterations; i++) {
+        //Calculating cost for step
         cost = univariateCost<T>(w,b,x,y);
-        if(i % 150 == 0) {
+        //Printing Step values
+        if(i % (iterations/10) == 0) {
             std::cout << "Iteration "<< i << ": " << w << ", "<< b << "| Cost: " << std::setprecision(6) << cost << std::endl;
         }
+        //Performing Gradient Descent
         gradient = univariateGradient<T>(w,b,x,y);
         w = w - learning_rate * gradient.first;
         b = b - learning_rate * gradient.second;
