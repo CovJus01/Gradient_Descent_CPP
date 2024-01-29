@@ -123,7 +123,7 @@ std::pair<T,T> univariateGradientDescent(T init_w, T init_b, std::vector<T> x, s
         cost = univariateCost<T>(w,b,x,y);
         //Printing Step values
         if(i % (iterations/10) == 0) {
-            std::cout << "Iteration "<< i << ": " << w << ", "<< b << "| Cost: " << std::setprecision(6) << cost << std::endl;
+            std::cout << "Iteration "<< i << ": " << w << ", "<< b << "     Cost: " << std::setprecision(6) << cost << std::endl;
         }
         //Performing Gradient Descent
         gradient = univariateGradient<T>(w,b,x,y);

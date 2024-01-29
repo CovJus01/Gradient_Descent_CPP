@@ -1,8 +1,11 @@
-#include "gradient-descent.h"
+#include "../../gradient-descent.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <string>
 
 int main() {
+
       // Learning Params and Data
       std::vector<double> x_train = {1.0, 2.0};
       std::vector<double> y_train = {300.0, 500.0};

@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import copy
 import math
 
+
+#************************* UNIVARIATE FUNCTIONS *************************
+
 def computeUnivariateCost(x, y, w, b): 
     """
     Computes the cost function for linear regression. 
@@ -107,3 +110,4 @@ def univariateGradientDescent(x, y, w_in, b_in, cost_function, gradient_function
             print(f"Iteration {i:4}: Cost {float(J_history[-1]):8.2f}   ")
         
     return w, b, J_history, w_history 
+
