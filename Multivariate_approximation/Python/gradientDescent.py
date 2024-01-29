@@ -196,3 +196,31 @@ def multivariateGradientDescent(X, y, w_in, b_in, cost_function, gradient_functi
       
         
     return w, b
+
+
+#******************************* Extra Resources ********************************
+
+def zScoreNormilization(x):
+    mean = np.mean(x, axis = 0)
+    deviation = np.std(x, axis = 0)
+
+    normalized_x = (x - mean)/deviation
+
+    return normalized_x, mean, deviation
+
+def maxNormilization(x):
+    
+    max = np.max(x, axis=0)
+    normalized_x = x/max
+
+    return normalized_x , max
+
+def meanNormilization(x):
+
+    mean = np.mean(x, axis = 0)
+    max  = np.max(x , axis = 0)
+    min  = np.min(x , axis = 0)
+    
+    normalized_x = (x - mean)/(max-min)
+
+    return normalized_x, mean, max, min

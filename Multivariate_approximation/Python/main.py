@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from gradientDescent import *
 
 #Initialization of parameters
-x_train = np.array([[0.1, 0.2, 0.3 , 0.4], [0.3, 0.7, 0.6, 0.3]])
-y_train = np.array([1.0, 0.5])
+x_train = np.array([[200, 10, 0.3 , 23], [300, 7, 0.6, 33], [100, 3, 0.1, 13], [800, 15, 0.9, 55]])
+y_train = np.array([200, 500, 800, 300])
 m = x_train.shape[0]
 n = x_train.shape[1]
 initial_w = np.zeros(n)
@@ -13,7 +13,13 @@ iterations = 10000
 learningRate = 0.3
 predicted = np.zeros(m)
 
-#Somewhat standardizing input data
+#Test different standardizing methods
+print(x_train)
+#x_train,_ = maxNormilization(x_train)
+#x_train,_,_,_ = meanNormilization(x_train)
+x_train,_,_ = zScoreNormilization(x_train)
+print(x_train)
+
 print(f'Initial parameters: {initial_w}, {initial_b}')
 
 #Plot Data
