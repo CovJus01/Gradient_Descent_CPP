@@ -4,6 +4,14 @@ from gradientDescent import *
 
 #Initialization of parameters
 x_train = np.array([[200, 10, 0.3 , 23], [300, 7, 0.6, 33], [100, 3, 0.1, 13], [800, 15, 0.9, 55]])
+
+#Feature modifications added squares of j = 0  and j = 1 to feature set
+squares = np.array(x_train[:, 0:2]**2)
+print(squares)
+squares = squares.reshape((4,2))
+x_train = np.append(x_train, squares, axis = 1)
+
+
 y_train = np.array([200, 500, 800, 300])
 m = x_train.shape[0]
 n = x_train.shape[1]
@@ -12,7 +20,6 @@ initial_b = 1.0
 iterations = 1000
 learningRate = 0.3
 predicted = np.zeros(m)
-
 #Test different standardizing methods
 #x_train,_ = maxNormilization(x_train)
 #x_train,_,_,_ = meanNormilization(x_train)
