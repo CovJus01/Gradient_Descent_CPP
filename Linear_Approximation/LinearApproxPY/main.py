@@ -4,7 +4,7 @@ from gradientDescent import *
 
 # Function created to read in specific type of data
 def readDataBarcelona():
-    input = open("../../housing-barcelona.csv", encoding="utf8")
+    input = open("../housing-barcelona.csv", encoding="utf8")
     input.readline()
     istream = input.readline()
     skip = False
