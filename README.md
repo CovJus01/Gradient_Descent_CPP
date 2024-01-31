@@ -3,7 +3,7 @@
 ## Purpose
 
 A project to practice and implement learned tools and strategies from Coursera Machine Learning Courses. Converting
-learned concepts into C++ aswell.
+learned concepts into C++ aswell (Work in progress).
 
 ## Project Structure
 
